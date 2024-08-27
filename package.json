@@ -1,11 +1,11 @@
 {
   "name": "schiar-io",
   "version": "1.0.0",
-  "homepage": "https://giovanischiar.github.io/schiar-io",
+  "homepage": "https://schiar.io",
   "main": "expo/AppEntry.js",
   "scripts": {
-   "predeploy": "npm run build",
-   "deploy": "gh-pages -d build",
+    "predeploy": "expo export -p web",
+    "deploy": "gh-pages -t -d dist",
     "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "@expo/metro-runtime": "~3.2.1",
-    "expo": "~51.0.26",
+    "expo": "^51.0.28",
     "expo-status-bar": "~1.12.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
