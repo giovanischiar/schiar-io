@@ -1,72 +1,180 @@
-import { StatusBar } from 'expo-status-bar';
-import { useState } from 'react';
-import { StyleSheet, Text, View, ScrollView, useWindowDimensions } from 'react-native';
-import { Android } from './src/components/Android';
-import { WearOS } from './src/components/WearOS';
-import { AndroidTV } from './src/components/AndroidTV';
-import { IOS } from './src/components/IOS';
-import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
-
-const FirstRoute = () => (
-  <ScrollView>
-    <View style={{flex: 1, padding: 30, flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-evenly', gap: 30, paddingHorizontal: 20}}>
-      <Android/>
-      <WearOS/>
-      <AndroidTV/>
-      <IOS/>
-    </View>
-  </ScrollView>
-);
-
-const SecondRoute = () => (
-  <View style={{flex: 1, padding: 30}}>
-    <Text style={{fontSize: 20}}>Mobile Developer with 7+ years of native Android development and 4 years in hybrid app development using React Native. I’ve built and published diverse mobile applications across Android, iOS, Android TV, and Wear OS, leading projects like Comb, a cashback app, from concept to deployment. My GitHub (github.com/giovanischiar) reflects my commitment to innovative solutions, continuous learning, and user-centric design. Proficient in Kotlin, Jetpack Compose, and React Native, I’m eager to contribute my skills to impactful mobile projects.</Text>
-  </View>
-);
-
-const renderScene = SceneMap({
-  first: FirstRoute,
-  second: SecondRoute,
-});
+import { useState, useEffect } from 'react';
+import { StyleSheet, Image, TouchableOpacity, View } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createDrawerNavigator, DrawerNavigationOptions } from '@react-navigation/drawer';
+import { PortifolioScreen } from './src/portfolio/PortifolioScreen';
+import { AboutScreen } from './src/about/AboutScreen';
+import { PortifolioAppScreen } from './src/details/PortifolioAppScreen';
+import { useWindowDimensions } from './src/components/WindowDimensions';
+import { HeaderBackButton } from '@react-navigation/elements';
 
 export default function App() {
-  const layout = useWindowDimensions();
+  var { height, width } = useWindowDimensions()
+  const Drawer = createDrawerNavigator();
+  const profilePhoto = require("./assets/info-icon.png");
+  const { headerRight, profilePhotoStyle } = styles;
+  const screenOptions = ({ navigation, route }): DrawerNavigationOptions => ({
+    headerShown: true,
+    headerStyle: {
+      backgroundColor: '#3c78d8ff'
+    },
+    headerTitleStyle: {
+       color: 'white',
+    },
+    drawerPosition: 'right',
+    drawerType: width > 768 ? 'permanent' : 'front',
+    headerLeft: (props) => route.name == 'Portifolio' ? <View/> : (
+      <HeaderBackButton
+        tintColor="white"
+        onPress={() => {
+           navigation.goBack(null);
+        }}
+      />
+    ),
+    headerRight: () => {
+      return width > 768 ? undefined : (
+        <TouchableOpacity 
+          onPress={() => { navigation.toggleDrawer() }} 
+          style={ headerRight }
+        >
+          <Image style={ profilePhotoStyle } source={profilePhoto} />
+        </TouchableOpacity>
+      )
+    }
+  });
 
-  const [index, setIndex] = useState(0);
-  const [routes] = useState([
-    { key: 'first', title: 'Apps' },
-    { key: 'second', title: 'About' },
-  ]);
+  let androidTechStack = [
+    "Android", 
+    "Android Studio", 
+    "Android SDK", 
+    "Kotlin", 
+    "MVVM", 
+    "Hilt (Dagger)", 
+    "Reactive Programming (Flow)", 
+    "Jetpack Compose" 
+  ];
 
-  const renderTabBar = props => (
-    <TabBar
-      {...props}
-      indicatorStyle={{ backgroundColor: 'white' }}
-      style={{ backgroundColor: '#3c78d8ff' }}
+
+  let iosTechStack = [
+    "iOS", 
+    "Xcode", 
+    "Swift", 
+    "MVVM",  
+    "Reactive Programming (Combine)", 
+    "Swift UI" 
+  ];
+
+  let FridgnetScreen = () => (
+    <PortifolioAppScreen 
+      name="Fridgnet" 
+      subtitle="Collect interesting places, and pin them in your map like a fridge magnet!" 
+      description ="This app shows you where all cities, counties, states, and countries your photos were taken. Each time you input a photo into the app, it will search for the city, county, state, and country, and then plot them on a map."
+      url="https://github.com/giovanischiar/fridgnet"
+      platforms={["Android"]}
+      techStack={[...androidTechStack, "REST API (Nominatim)", "Database (Room)", "Geocoder"]}
     />
   );
 
-  return (
-    <View style={{flex: 1}}>
-      <View style={{flexDirection: 'row', height: 200, backgroundColor: "#3c78d8ff", alignSelf: 'stretch', alignItems: 'flex-end', paddingStart: 20, paddingBottom: 20}}>
-        <Text style={{fontSize: 72, color: 'white'}}>schiar.io</Text>
-      </View>
-    <TabView
-      renderTabBar={renderTabBar}
-      style={{flex: 1}}
-      navigationState={{ index, routes }}
-      renderScene={renderScene}
-      onIndexChange={setIndex}
-      initialLayout={{ width: layout.width }}
+  let MoChannelScreen = () => (
+    <PortifolioAppScreen 
+      name="Mo Channel" 
+      subtitle="See your own channel with videos hosted in your computer!" 
+      description ="This Android TV application allows you to watch videos hosted on your own computer on your TV."
+      url="https://github.com/giovanischiar/mo-channel"
+      platforms={["Android TV"]}
+      techStack={[...androidTechStack, "Android TV", "Database (Room)", "Exoplayer", "REST API"]}
     />
-    </View>
+  );
+
+  let RuleOf3Screen = () => (
+    <PortifolioAppScreen 
+      name="Rule of 3" 
+      subtitle="Calculate the famous rule of three on your wrist!" 
+      description ="This tiny WearOS app allows you to use the rule of three to calculate the fourth number by inputting the prior three numbers."
+      url="https://github.com/giovanischiar/rule-of-3-wearos"
+      platforms={["Wear OS"]}
+      techStack={[...androidTechStack, "Wear OS", "Database (Room)"]}
+    />
+  );
+
+  let PokechartScreen = () => (
+    <PortifolioAppScreen 
+      name="Pokechart" 
+      subtitle="Compare types to check their vulnerabilities, resistances, and more." 
+      description ="Input the types, and the app will return the combined vulnerabilities and resistances."
+      url="https://github.com/giovanischiar/pokechart"
+      platforms={["Wear OS"]}
+      techStack={[...androidTechStack, "Wear OS"]}
+    />
+  );
+
+  let BluversationScreen = () => (
+    <PortifolioAppScreen 
+      name="Bluversation" 
+      subtitle="A bluetooth chat" 
+      description ="A simple bluetooth chat iOS and macOS application."
+      url="https://github.com/giovanischiar/bluversation-ios"
+      platforms={["iOS", "macOS"]}
+      techStack={iosTechStack}
+    />
+  );
+
+  const config = {
+    screens: {
+      Portifolio: {
+        path: ''
+      },
+      
+      Fridgnet: {
+        path: 'fridgnet'
+      },
+
+      "Mo Channel": {
+        path: "mo-channel"
+      },
+      
+      "Rule of 3": {
+        path: "rule-of-3"
+      },
+
+      Pokechart: {
+        path: "pokechart"
+      },
+
+      Bluversation: {
+        path: "bluversation"
+      }
+    },
+  };
+    
+  return (
+    <NavigationContainer linking={{config}}>
+      <Drawer.Navigator 
+        drawerContent={ AboutScreen } 
+        initialRouteName="Portifolio" 
+        screenOptions={screenOptions}
+      >
+        <Drawer.Screen name="Portifolio" component={ PortifolioScreen } />
+        <Drawer.Screen name="Fridgnet" component={ FridgnetScreen } />
+        <Drawer.Screen name="Mo Channel" component={ MoChannelScreen } />
+        <Drawer.Screen name="Rule of 3" component={ RuleOf3Screen } />
+        <Drawer.Screen name="Pokechart" component={ PokechartScreen } />
+        <Drawer.Screen name="Bluversation" component={ BluversationScreen } />
+      </Drawer.Navigator>
+    </NavigationContainer>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#000',
-    flexDirection: 'column'
+  headerRight: {
+    flex: 1, 
+    alignItems: 'center', 
+    justifyContent: 'center'
   },
+
+  profilePhotoStyle: {
+    width: 24, 
+    height: 24, 
+    right: 15
+  }
 });
