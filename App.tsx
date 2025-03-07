@@ -91,7 +91,7 @@ export default function App() {
       name="Rule of 3" 
       subtitle="Calculate the famous rule of three on your wrist!" 
       description ="This tiny WearOS app allows you to use the rule of three to calculate the fourth number by inputting the prior three numbers."
-      url="https://github.com/giovanischiar/rule-of-3-wearos"
+      url="https://github.com/giovanischiar/rule-of-three-wearos"
       platforms={["Wear OS"]}
       techStack={[...androidTechStack, "Wear OS", "Database (Room)"]}
     />

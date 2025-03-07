@@ -17,7 +17,7 @@ export function PortifolioScreen(props: {navigation: any}) {
 	    	/>
 	    	<PortifolioApp 
 	    		name="Rule of 3" 
-	    		url="https://github.com/giovanischiar/rule-of-3-wearos"
+	    		url="https://github.com/giovanischiar/rule-of-three-wearos"
 	    		onPress={() => navigation.navigate("Rule of 3")} 
 	    	/>
 	    	<PortifolioApp 
